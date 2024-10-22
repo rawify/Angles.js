@@ -1,9 +1,9 @@
 {
     "name": "angles",
-    "title": "angles.js",
-    "version": "0.2.4",
-    "homepage": "https://github.com/infusion/Angles.js",
-    "bugs": "https://github.com/infusion/Angles.js/issues",
+    "title": "Angles.js",
+    "version": "0.3.0",
+    "homepage": "https://github.com/rawify/Angles.js",
+    "bugs": "https://github.com/rawify/Angles.js/issues",
     "description": "A function collection for working with angles",
     "keywords": [
         "degree",
@@ -23,25 +23,46 @@
         "mean",
         "between"
     ],
-    "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
-    "main": "angles",
     "private": false,
+    "main": "./dist/angles.js",
+    "module": "./dist/angles.mjs",
+    "types": "./angles.d.ts",
+    "browser": "./dist/angles.min.js",
+    "unpkg": "./dist/angles.min.js",
     "readmeFilename": "README.md",
-    "license": "MIT OR GPL-2.0",
+    "exports": {
+        ".": {
+            "types": "./angles.d.ts",
+            "require": "./dist/angles.js",
+            "import": "./dist/angles.mjs"
+        }
+    },
     "repository": {
         "type": "git",
-        "url": "git://github.com/infusion/Angles.js.git"
+        "url": "git@github.com:rawify/Angles.js.git"
     },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/rawify"
+    },
+    "author": {
+        "name": "Robert Eisele",
+        "email": "robert@raw.org",
+        "url": "https://raw.org/"
+    },
+    "license": "MIT",
     "engines": {
         "node": "*"
     },
+    "directories": {
+        "test": "tests"
+    },
     "scripts": {
+        "build": "crude-build Angles",
         "test": "mocha tests/*.js"
     },
     "devDependencies": {
-        "mocha": "*",
-        "should": "*",
-        "gulp": "*",
-        "google-closure-compiler": "*"
+        "crude-build": "^0.1.0",
+        "mocha": "*"
     }
 }
