@@ -1,4 +1,4 @@
-declare class Angles {
+export class Angles {
     static SCALE: number;
 
     /**
