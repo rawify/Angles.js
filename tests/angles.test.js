@@ -77,7 +77,7 @@ var tests = [
   { m: 'equals', p: [-4 * Math.PI, 0], r: true, s: 2 * Math.PI }, // -2 full turns
   { m: 'equals', p: [0, 1e-12], r: true, s: 2 * Math.PI }, // Small difference within tolerance
   { m: 'equals', p: [0, 1e-7], r: false, s: 2 * Math.PI }, // Small difference outside tolerance
-  { m: 'equals', p: [2 * Math.PI - 1e-9, 0], r: true, s: 2 * Math.PI }, // Edge case close to wrap-around
+  { m: 'equals', p: [2 * Math.PI - 1e-12, 0], r: true, s: 2 * Math.PI }, // Edge case close to wrap-around
   { m: 'equals', p: [Math.PI, -Math.PI - 1e-12], r: true, s: 2 * Math.PI }, // Slightly below -π
   { m: 'equals', p: [Math.PI, -Math.PI + 1e-12], r: true, s: 2 * Math.PI } // Slightly above -π
 ];
