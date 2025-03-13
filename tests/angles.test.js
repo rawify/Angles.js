@@ -54,6 +54,32 @@ var tests = [
   { m: 'lerp', p: [-30, 30, 0.25, 1], r: 255, s: 360 },
   { m: 'lerp', p: [10, 10, 0.5, -1], r: 10, s: 360 },
   { m: 'lerp', p: [10, 10, 0.5, 1], r: 10, s: 360 },
+  { m: 'equals', p: [0, 360], r: true, s: 360 },
+  { m: 'equals', p: [90, -270], r: true, s: 360 },
+  { m: 'equals', p: [-180, 180], r: true, s: 360 },
+  { m: 'equals', p: [45, 405], r: true, s: 360 },
+  { m: 'equals', p: [180, 540], r: true, s: 360 },
+  { m: 'equals', p: [30, -330], r: true, s: 360 },
+  { m: 'equals', p: [90, 270], r: false, s: 360 }, // Should be different
+  { m: 'equals', p: [-720, 0], r: true, s: 360 }, // -2 full turns
+  { m: 'equals', p: [0, 1e-12 * 180 / Math.PI], r: true, s: 360 }, // Small difference within tolerance
+  { m: 'equals', p: [0, 1e-7 * 180 / Math.PI], r: false, s: 360 }, // Small difference outside tolerance
+  { m: 'equals', p: [359.999999999999999, 0], r: true, s: 360 }, // Edge case close to wrap-around
+  { m: 'equals', p: [180, -180.00000000001], r: true, s: 360 }, // Slightly below -180°
+  { m: 'equals', p: [180, -179.9999999999999], r: true, s: 360 }, // Slightly above -180°
+  { m: 'equals', p: [0, 2 * Math.PI], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [Math.PI / 2, -3 * Math.PI / 2], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [-Math.PI, Math.PI], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [Math.PI / 4, 9 * Math.PI / 4], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [Math.PI, 3 * Math.PI], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [Math.PI / 6, -11 * Math.PI / 6], r: true, s: 2 * Math.PI },
+  { m: 'equals', p: [Math.PI / 2, 3 * Math.PI / 2], r: false, s: 2 * Math.PI }, // Should be different
+  { m: 'equals', p: [-4 * Math.PI, 0], r: true, s: 2 * Math.PI }, // -2 full turns
+  { m: 'equals', p: [0, 1e-12], r: true, s: 2 * Math.PI }, // Small difference within tolerance
+  { m: 'equals', p: [0, 1e-7], r: false, s: 2 * Math.PI }, // Small difference outside tolerance
+  { m: 'equals', p: [2 * Math.PI - 1e-9, 0], r: true, s: 2 * Math.PI }, // Edge case close to wrap-around
+  { m: 'equals', p: [Math.PI, -Math.PI - 1e-12], r: true, s: 2 * Math.PI }, // Slightly below -π
+  { m: 'equals', p: [Math.PI, -Math.PI + 1e-12], r: true, s: 2 * Math.PI } // Slightly above -π
 ];
 
 for (var i = 0; i <= 360; i += 2) {

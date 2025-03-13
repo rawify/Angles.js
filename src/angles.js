@@ -1,13 +1,13 @@
 /**
- * @license Angles.js v0.3.0 10/22/2024
+ * @license Angles.js v0.4.0 3/13/2025
  * https://github.com/rawify/Angles.js
  *
- * Copyright (c) 2024, Robert Eisele (https://raw.org/)
+ * Copyright (c) 2025, Robert Eisele (https://raw.org/)
  * Licensed under the MIT license.
  **/
 
 var TAU = 2 * Math.PI;
-var EPS = 1e-15;
+var EPS = 1e-10;
 
 // var DIRECTIONS = ["N", "E", "S", "W"];
 var DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
@@ -298,4 +298,23 @@ var Angles = {
 
     return Math.atan2(y, x) * s / TAU;
   },
+  /**
+   * Determines if two angles are equal
+   * 
+   * @param {number} angle1 
+   * @param {number} angle2 
+   * @returns {boolean}
+   */
+  'equals': function (angle1, angle2) {
+
+    var m = this['SCALE'];
+
+    const normalizedAngle1 = mod(angle1, m);
+    const normalizedAngle2 = mod(angle2, m);
+
+    const diff1 = Math.abs(normalizedAngle1 - normalizedAngle2);
+    const diff2 = Math.abs(diff1 - 2 * Math.PI);
+
+    return diff1 < EPS || diff2 < EPS;
+  }
 };

@@ -1,7 +1,7 @@
 {
     "name": "angles",
     "title": "Angles.js",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "homepage": "https://github.com/rawify/Angles.js",
     "bugs": "https://github.com/rawify/Angles.js/issues",
     "description": "A function collection for working with angles",

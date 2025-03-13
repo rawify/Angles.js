@@ -59,6 +59,10 @@ Determines what the shortest rotation direction is to go from one angle to anoth
 
 Determines if an angle `n` is between two other angles `a, b`. The angles don't have to be normalized.
 
+### equals(a, b)
+
+Determines if two angles `a` and `b` are equal.
+
 ### diff(a, b)
 
 Calculates the angular difference between two angles
@@ -142,5 +146,5 @@ npm run test
 
 ## Copyright and Licensing
 
-Copyright (c) 2024, [Robert Eisele](https://raw.org/)
+Copyright (c) 2025, [Robert Eisele](https://raw.org/)
 Licensed under the MIT license.
