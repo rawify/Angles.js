@@ -4,7 +4,7 @@
     "version": "0.4.1",
     "homepage": "https://github.com/rawify/Angles.js",
     "bugs": "https://github.com/rawify/Angles.js/issues",
-    "description": "A function collection for working with angles",
+    "description": "The RAW function collection for working with angles",
     "keywords": [
         "degree",
         "degrees",

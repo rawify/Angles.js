@@ -105,23 +105,46 @@ Translates the angle to a point of the compass ("N", "NE", "E", "SE", "S", "SW",
 
 ## Installation
 
-Installing Angles.js is as easy as cloning this repo or use one of the following command:
+You can install `Angles.js` via npm:
 
-```
+```bash
 npm install angles
 ```
 
+Or with yarn:
 
-## Using Angles.js with the browser
+```bash
+yarn add angles
+```
 
+Alternatively, download or clone the repository:
+
+```bash
+git clone https://github.com/rawify/Angles.js
+```
+
+## Usage
+
+Include the `angles.min.js` file in your project:
 
 ```html
-<script src="angles.min.js"></script>
+<script src="path/to/angles.min.js"></script>
 <script>
   console.log(Angles.normalize(128));
 </script>
 ```
 
+Or in a Node.js project:
+
+```javascript
+const Angles = require('angles');
+```
+
+or
+
+```javascript
+import Angles from 'angles';
+```
 
 ## Coding Style
 
