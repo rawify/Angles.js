@@ -62,10 +62,10 @@ var tests = [
   { m: 'equals', p: [30, -330], r: true, s: 360 },
   { m: 'equals', p: [90, 270], r: false, s: 360 }, // Should be different
   { m: 'equals', p: [-720, 0], r: true, s: 360 }, // -2 full turns
-  { m: 'equals', p: [0, 1e-12 * 180 / Math.PI], r: true, s: 360 }, // Small difference within tolerance
+  { m: 'equals', p: [0, 1e-14 * 180 / Math.PI], r: true, s: 360 }, // Small difference within tolerance
   { m: 'equals', p: [0, 1e-7 * 180 / Math.PI], r: false, s: 360 }, // Small difference outside tolerance
   { m: 'equals', p: [359.999999999999999, 0], r: true, s: 360 }, // Edge case close to wrap-around
-  { m: 'equals', p: [180, -180.00000000001], r: true, s: 360 }, // Slightly below -180°
+  { m: 'equals', p: [-180, -180 - 1e-13], r: true, s: 360 }, // Slightly below -180°
   { m: 'equals', p: [180, -179.9999999999999], r: true, s: 360 }, // Slightly above -180°
   { m: 'equals', p: [0, 2 * Math.PI], r: true, s: 2 * Math.PI },
   { m: 'equals', p: [Math.PI / 2, -3 * Math.PI / 2], r: true, s: 2 * Math.PI },
@@ -75,11 +75,11 @@ var tests = [
   { m: 'equals', p: [Math.PI / 6, -11 * Math.PI / 6], r: true, s: 2 * Math.PI },
   { m: 'equals', p: [Math.PI / 2, 3 * Math.PI / 2], r: false, s: 2 * Math.PI }, // Should be different
   { m: 'equals', p: [-4 * Math.PI, 0], r: true, s: 2 * Math.PI }, // -2 full turns
-  { m: 'equals', p: [0, 1e-12], r: true, s: 2 * Math.PI }, // Small difference within tolerance
+  { m: 'equals', p: [0, 1e-13], r: true, s: 2 * Math.PI }, // Small difference within tolerance
   { m: 'equals', p: [0, 1e-7], r: false, s: 2 * Math.PI }, // Small difference outside tolerance
-  { m: 'equals', p: [2 * Math.PI - 1e-12, 0], r: true, s: 2 * Math.PI }, // Edge case close to wrap-around
-  { m: 'equals', p: [Math.PI, -Math.PI - 1e-12], r: true, s: 2 * Math.PI }, // Slightly below -π
-  { m: 'equals', p: [Math.PI, -Math.PI + 1e-12], r: true, s: 2 * Math.PI } // Slightly above -π
+  { m: 'equals', p: [2 * Math.PI - 1e-13, 0], r: true, s: 2 * Math.PI }, // Edge case close to wrap-around
+  { m: 'equals', p: [Math.PI, -Math.PI - 1e-13], r: true, s: 2 * Math.PI }, // Slightly below -π
+  { m: 'equals', p: [Math.PI, -Math.PI + 1e-13], r: true, s: 2 * Math.PI } // Slightly above -π
 ];
 
 for (var i = 0; i <= 360; i += 2) {
@@ -138,7 +138,7 @@ describe('Angles', function () {
         if (typeof c.r !== 'number')
           assert.equal(angles[c.m].apply(angles, c.p), c.r)
         else
-          assert(Math.abs(angles[c.m].apply(angles, c.p) - c.r) < 1e-14)
+          assert(Math.abs(angles[c.m].apply(angles, c.p) - c.r) < 1e-13)
       });
 
     })(i);

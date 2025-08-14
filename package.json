@@ -1,7 +1,7 @@
 {
     "name": "angles",
     "title": "Angles.js",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "homepage": "https://github.com/rawify/Angles.js",
     "bugs": "https://github.com/rawify/Angles.js/issues",
     "description": "The RAW function collection for working with angles",
@@ -62,7 +62,7 @@
         "test": "mocha tests/*.js"
     },
     "devDependencies": {
-        "crude-build": "^0.1.0",
+        "crude-build": "^0.1.2",
         "mocha": "*"
     }
 }
