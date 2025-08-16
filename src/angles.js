@@ -1,5 +1,5 @@
 /**
- * @license Angles.js v0.5.0 8/14/2025
+ * @license Angles.js v0.5.1 8/16/2025
  * https://github.com/rawify/Angles.js
  *
  * Copyright (c) 2025, Robert Eisele (https://raw.org/)

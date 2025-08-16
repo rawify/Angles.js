@@ -136,4 +136,4 @@ declare class Angles {
     static average(angles: number[]): number;
 }
 
-export = Angles;
+export { Angles as default, Angles };

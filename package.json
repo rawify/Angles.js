@@ -1,10 +1,10 @@
 {
     "name": "angles",
     "title": "Angles.js",
-    "version": "0.5.0",
+    "version": "0.5.1",
+    "description": "The RAW function collection for working with angles",
     "homepage": "https://github.com/rawify/Angles.js",
     "bugs": "https://github.com/rawify/Angles.js/issues",
-    "description": "The RAW function collection for working with angles",
     "keywords": [
         "degree",
         "degrees",
@@ -26,20 +26,41 @@
     "private": false,
     "main": "./dist/angles.js",
     "module": "./dist/angles.mjs",
-    "types": "./angles.d.ts",
     "browser": "./dist/angles.min.js",
     "unpkg": "./dist/angles.min.js",
-    "readmeFilename": "README.md",
+    "types": "./angles.d.ts",
     "exports": {
         ".": {
-            "types": "./angles.d.ts",
-            "require": "./dist/angles.js",
-            "import": "./dist/angles.mjs"
+            "import": {
+                "types": "./angles.d.mts",
+                "default": "./dist/angles.mjs"
+            },
+            "require": {
+                "types": "./angles.d.ts",
+                "default": "./dist/angles.js"
+            },
+            "browser": {
+                "types": "./angles.d.ts",
+                "default": "./dist/angles.min.js"
+            },
+            "default": {
+                "types": "./angles.d.ts",
+                "default": "./dist/angles.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
+    "typesVersions": {
+        "<4.7": {
+            "*": [
+                "angles.d.ts"
+            ]
         }
     },
+    "sideEffects": false,
     "repository": {
         "type": "git",
-        "url": "git@github.com:rawify/Angles.js.git"
+        "url": "git+ssh://git@github.com/rawify/Angles.js.git"
     },
     "funding": {
         "type": "github",
