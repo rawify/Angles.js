@@ -1,8 +1,9 @@
 {
     "name": "angles",
     "title": "Angles.js",
-    "version": "0.5.1",
-    "description": "The RAW function collection for working with angles",
+    "version": "0.6.0",
+    "type": "commonjs",
+    "description": "Angle normalization, conversion, interpolation, circular mean, distance, and compass helpers for JavaScript",
     "homepage": "https://github.com/rawify/Angles.js",
     "bugs": "https://github.com/rawify/Angles.js/issues",
     "keywords": [
@@ -28,39 +29,40 @@
     "module": "./dist/angles.mjs",
     "browser": "./dist/angles.min.js",
     "unpkg": "./dist/angles.min.js",
-    "types": "./angles.d.ts",
+    "types": "./dist/angles.d.ts",
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
     "exports": {
         ".": {
             "import": {
-                "types": "./angles.d.mts",
+                "types": "./dist/angles.d.mts",
                 "default": "./dist/angles.mjs"
             },
             "require": {
-                "types": "./angles.d.ts",
+                "types": "./dist/angles.d.ts",
                 "default": "./dist/angles.js"
             },
-            "browser": {
-                "types": "./angles.d.ts",
-                "default": "./dist/angles.min.js"
-            },
             "default": {
-                "types": "./angles.d.ts",
+                "types": "./dist/angles.d.ts",
                 "default": "./dist/angles.js"
             }
         },
+        "./browser": {
+            "import": {
+                "types": "./dist/angles.d.mts",
+                "default": "./dist/angles.min.mjs"
+            },
+            "default": "./dist/angles.min.js"
+        },
         "./package.json": "./package.json"
-    },
-    "typesVersions": {
-        "<4.7": {
-            "*": [
-                "angles.d.ts"
-            ]
-        }
     },
     "sideEffects": false,
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/rawify/Angles.js.git"
+        "url": "git+https://github.com/rawify/Angles.js.git"
     },
     "funding": {
         "type": "github",
@@ -73,17 +75,22 @@
     },
     "license": "MIT",
     "engines": {
-        "node": "*"
+        "node": ">=20"
     },
     "directories": {
         "test": "tests"
     },
     "scripts": {
-        "build": "crude-build Angles",
-        "test": "mocha tests/*.js"
+        "clean": "node scripts/clean.mjs",
+        "typecheck": "tsc --noEmit",
+        "build": "node scripts/build.mjs",
+        "test:types": "tsc -p tests/types/tsconfig.json",
+        "test:runtime": "node --test tests/*.test.js",
+        "test": "npm run typecheck && npm run build && npm run test:types && npm run test:runtime",
+        "prepublishOnly": "npm test"
     },
     "devDependencies": {
-        "crude-build": "^0.1.2",
-        "mocha": "*"
+        "esbuild": "^0.25.12",
+        "typescript": "^5.9.3"
     }
 }

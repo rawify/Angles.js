@@ -1,259 +1,133 @@
-'use strict';
-
-var TAU = 2 * Math.PI;
-var EPS = 1e-12;
-
-// var DIRECTIONS = ["N", "E", "S", "W"];
-var DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-// var DIRECTIONS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
-
+// src/angles.ts
 /**
- * Mathematical modulo
+ * @license Angles.js v0.6.0 9/10/2026
+ * https://raw.org/software/libraries/angles-js/
  *
- * @param {number} x
- * @param {number} m
- * @returns {number}
- */
-function mod(x, m) {
-  return (x % m + m) % m;
+ * Copyright (c) 2025-2026, Robert Eisele (https://raw.org/)
+ * Licensed under the MIT license.
+ **/
+var TAU = 2 * Math.PI;
+var EPSILON = 1e-12;
+var DIRECTIONS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+function modulo(value, modulus) {
+  return (value % modulus + modulus) % modulus;
 }
-
-var Angles = {
-  'SCALE': 360,
-
-  /**
-   * Normalize an arbitrary angle to the interval [-SCALE/2, SCALE/2)
-   *
-   * @param {number} n
-   * @returns {number}
-   */
-  'normalizeHalf': function (n) {
-    const c = this['SCALE'];
-    const h = c / 2;
-    return mod(n + h, this['SCALE']) - h;
-  },
-
-  /**
-   * Normalize an arbitrary angle to the interval [0, SCALE)
-   *
-   * @param {number} n
-   * @returns {number}
-   */
-  'normalize': function (n) {
-    return mod(n, this['SCALE']);
-  },
-
-  /**
-   * Gets the shortest direction to rotate to another angle
-   *
-   * @param {number} from
-   * @param {number} to
-   * @returns {number}
-   */
-  'shortestDirection': function (from, to) {
-    const d = this['normalizeHalf'](to - from); // + => CW, - => CCW
-    if (Math.abs(d) < EPS) return 0;
-    return d < 0 ? +1 : -1;
-  },
-
-  /**
-   * Checks if an angle is between two other angles (endpoints inclusive, EPS tolerance)
-   *
-   * @param {number} n
-   * @param {number} a
-   * @param {number} b
-   * @returns {boolean}
-   */
-  'between': function (n, a, b) {
-    const c = this['SCALE'];
-    n = mod(n, c);
-    a = mod(a, c);
-    b = mod(b, c);
-
-    return a <= b
-      ? (a - EPS <= n && n <= b + EPS)
-      : (a - EPS <= n || n <= b + EPS);
-  },
-
-  /**
-   * Minimal unsigned angular difference between two angles (in SCALE units)
-   * @param {number} a
-   * @param {number} b
-   * @returns {number}
-   */
-  'diff': function (a, b) {
-    const c = this['SCALE'], h = c / 2;
-    return Math.abs(((b - a + h) % c + c) % c - h);
-  },
-
-  /**
-   * Minimal distance between two angles (unsigned), in SCALE units
-   *
-   * @param {number} a
-   * @param {number} b
-   * @returns {number}
-   */
-  'distance': function (a, b) {
-    return Math.abs(this['normalizeHalf'](a - b));
-  },
-
-  /**
-   * Calculate radians from current angle units
-   *
-   * @param {number} n
-   * @returns {number}
-   */
-  'toRad': function (n) {
-    return n / this['SCALE'] * TAU;
-  },
-
-  /**
-   * Calculate degrees from current angle units
-   *
-   * @param {number} n
-   * @returns {number}
-   */
-  'toDeg': function (n) {
-    return n / this['SCALE'] * 360;
-  },
-
-  /**
-   * Calculate gons from current angle units
-   *
-   * @param {number} n
-   * @returns {number}
-   */
-  'toGon': function (n) {
-    return n / this['SCALE'] * 400;
-  },
-
-  /**
-   * Given sine and cosine of an angle, return the original angle in current units
-   *
-   * @param {number} sin
-   * @param {number} cos
-   * @returns {number}
-   */
-  'fromSinCos': function (sin, cos) {
-    return ((Math.atan2(sin, cos) + TAU) % TAU) * this['SCALE'] / TAU;
-  },
-
-  /**
-   * Angle of the line p1 -> p2, in current units
-   *
-   * @param {Array} p1
-   * @param {Array} p2
-   * @returns {number}
-   */
-  'fromSlope': function (p1, p2) {
-    const dx = p2[0] - p1[0];
-    const dy = p2[1] - p1[1];
-    if (dx === 0 && dy === 0) return NaN; // undefined direction
-    const angle = (Math.atan2(dy, dx) + TAU) % TAU;
-    return angle * this['SCALE'] / TAU;
-  },
-
-  /**
-   * Returns the region index (quadrant/octant/…); 0 if exactly on a boundary (within EPS)
-   *
-   * @param {number} x The point x-coordinate
-   * @param {number} y The point y-coordinate
-   * @param {number=} k The optional number of regions in the coordinate-system, 4 = quadrant, 8 = octant, …
-   * @param {number=} shift An optional angle (in current units) to rotate the coordinate system
-   * @returns {number}
-   */
-  'quadrant': function (x, y, k = 4, shift = 0) {
-    const s = this['SCALE'];
-
-    // angle in [0,1) turns
-    const phiTurns = (Math.atan2(y, x) + TAU) / TAU;
-
-    // Bin size in current units and scaled tolerance for boundary detection
-    const bin = s / k;
-    // distance to nearest bin boundary (mod bin)
-    const u = (phiTurns * s + shift) % bin;
-    const d = Math.min(u, bin - u);
-
-    if (d < EPS * bin) return 0;
-
-    const idx = Math.floor((phiTurns * s + shift) / bin);
-    return 1 + mod(idx, k);
-  },
-
-  /**
-   * Calculates the compass direction of the given angle
-   *
-   * @param {number} course
-   * @returns {string}
-   */
-  'compass': function (course) {
-    // 0° = N; 90° = E; 180° = S; 270° = W (for SCALE=360 and DIRECTIONS length = 8)
-    const s = this['SCALE'];
-    const k = DIRECTIONS.length;
-    const idx = Math.floor(mod(course, s) / s * k + 0.5);
-    return DIRECTIONS[idx % k];
-  },
-
-  /**
-   * Linear interpolation between two angles
-   *
-   * @param {number} a Angle one
-   * @param {number} b Angle two
-   * @param {number} p Percentage
-   * @param {number} dir Direction (either 1 [=CW] or -1 [=CCW])
-   * @returns {number}
-   */
-  'lerp': function (a, b, p, dir) {
-    const s = this['SCALE'];
-
-    a = mod(a, s);
-    b = mod(b, s);
-
-    if (this['distance'](a, b) < EPS) return a;
-
-    // delta along shortest path
-    let delta = this['normalizeHalf'](b - a);
-
-    // honor forced direction: dir = -1 (CW) or +1 (CCW)
-    if (dir === -1 && delta < 0) delta += s;
-    else if (dir === +1 && delta > 0) delta -= s;
-
-    return mod(a + p * delta, s);
-  },
-
-  /**
-   * Average (mean) angle of an array of angles (returns NaN if ambiguous)
-   *
-   * @param {Array<number>} angles Angle array
-   * @returns {number}
-   */
-  'average': function (angles) {
-    const s = this['SCALE'];
-    if (!angles.length) return NaN;
-
-    let sx = 0, sy = 0;
-    const f = TAU / s;
-    for (let i = 0; i < angles.length; i++) {
-      const t = angles[i] * f;
-      sx += Math.cos(t);
-      sy += Math.sin(t);
+var _Angles = class _Angles {
+  constructor() {
+  }
+  static get SCALE() {
+    return _Angles.scale;
+  }
+  static set SCALE(scale) {
+    if (!Number.isFinite(scale) || scale <= 0) {
+      throw new RangeError("SCALE must be a finite positive number");
     }
-    const r2 = sx * sx + sy * sy;
-    if (r2 < EPS * EPS) return NaN; // ambiguous / opposite angles
-    return (Math.atan2(sy, sx) * s / TAU + s) % s;
-  },
-
+    _Angles.scale = scale;
+  }
+  /** Normalizes an angle to `[-SCALE / 2, SCALE / 2)`. */
+  static normalizeHalf(angle) {
+    const half = _Angles.SCALE / 2;
+    return modulo(angle + half, _Angles.SCALE) - half;
+  }
+  /** Normalizes an angle to `[0, SCALE)`. */
+  static normalize(angle) {
+    return modulo(angle, _Angles.SCALE);
+  }
+  /** Returns `-1` clockwise, `1` counter-clockwise, or `0` when equal. */
+  static shortestDirection(from, to) {
+    const delta = _Angles.normalizeHalf(to - from);
+    if (Math.abs(delta) < EPSILON) return 0;
+    return delta < 0 ? 1 : -1;
+  }
+  /** Checks the clockwise wrapped interval from `start` to `end`, inclusively. */
+  static between(angle, start, end) {
+    const normalizedAngle = _Angles.normalize(angle);
+    const normalizedStart = _Angles.normalize(start);
+    const normalizedEnd = _Angles.normalize(end);
+    return normalizedStart <= normalizedEnd ? normalizedStart - EPSILON <= normalizedAngle && normalizedAngle <= normalizedEnd + EPSILON : normalizedStart - EPSILON <= normalizedAngle || normalizedAngle <= normalizedEnd + EPSILON;
+  }
+  /** Returns the minimal unsigned angular difference. */
+  static diff(a, b) {
+    return Math.abs(_Angles.normalizeHalf(b - a));
+  }
+  /** Returns the minimal unsigned angular distance. */
+  static distance(a, b) {
+    return Math.abs(_Angles.normalizeHalf(a - b));
+  }
+  static toRad(angle) {
+    return angle / _Angles.SCALE * TAU;
+  }
+  static toDeg(angle) {
+    return angle / _Angles.SCALE * 360;
+  }
+  static toGon(angle) {
+    return angle / _Angles.SCALE * 400;
+  }
+  /** Reconstructs a normalized angle from its sine and cosine. */
+  static fromSinCos(sine, cosine) {
+    return _Angles.normalize(Math.atan2(sine, cosine) * _Angles.SCALE / TAU);
+  }
+  /** Returns the direction of the line from `start` to `end`. */
+  static fromSlope(start, end) {
+    const deltaX = end[0] - start[0];
+    const deltaY = end[1] - start[1];
+    if (deltaX === 0 && deltaY === 0) return Number.NaN;
+    return _Angles.normalize(Math.atan2(deltaY, deltaX) * _Angles.SCALE / TAU);
+  }
   /**
-   * Determines if two angles are equal within tolerance
-   *
-   * @param {number} angle1
-   * @param {number} angle2
-   * @returns {boolean}
+   * Returns a one-based region index, or zero when the point lies on a boundary.
+   * `regions=4` yields quadrants and `regions=8` yields octants.
    */
-  'equals': function (angle1, angle2) {
-    return this['distance'](angle1, angle2) < EPS;
+  static quadrant(x, y, regions = 4, shift = 0) {
+    const angle = _Angles.normalize(Math.atan2(y, x) * _Angles.SCALE / TAU + shift);
+    const binSize = _Angles.SCALE / regions;
+    const offset = modulo(angle, binSize);
+    const boundaryDistance = Math.min(offset, binSize - offset);
+    if (boundaryDistance < EPSILON * binSize) return 0;
+    return 1 + Math.floor(angle / binSize);
+  }
+  /** Returns the nearest eight-point compass direction (`0` is north). */
+  static compass(course) {
+    if (!Number.isFinite(course)) return void 0;
+    const index = Math.floor(_Angles.normalize(course) / _Angles.SCALE * DIRECTIONS.length + 0.5);
+    return DIRECTIONS[index % DIRECTIONS.length];
+  }
+  /** Interpolates angles, optionally forcing clockwise (`-1`) or counter-clockwise (`1`). */
+  static lerp(a, b, amount, direction) {
+    const start = _Angles.normalize(a);
+    const end = _Angles.normalize(b);
+    if (_Angles.distance(start, end) < EPSILON) return start;
+    let delta = _Angles.normalizeHalf(end - start);
+    if (direction === -1 && delta < 0) delta += _Angles.SCALE;
+    else if (direction === 1 && delta > 0) delta -= _Angles.SCALE;
+    return _Angles.normalize(start + amount * delta);
+  }
+  /** Returns the circular mean, or `NaN` for empty or ambiguous input. */
+  static average(angles) {
+    if (angles.length === 0) return Number.NaN;
+    let cosineSum = 0;
+    let sineSum = 0;
+    const factor = TAU / _Angles.SCALE;
+    for (const angle of angles) {
+      const radians = angle * factor;
+      cosineSum += Math.cos(radians);
+      sineSum += Math.sin(radians);
+    }
+    const ambiguityThreshold = EPSILON * angles.length;
+    if (cosineSum * cosineSum + sineSum * sineSum < ambiguityThreshold * ambiguityThreshold) {
+      return Number.NaN;
+    }
+    return _Angles.normalize(Math.atan2(sineSum, cosineSum) * _Angles.SCALE / TAU);
+  }
+  static equals(a, b) {
+    return _Angles.distance(a, b) < EPSILON;
   }
 };
+_Angles.scale = 360;
+var Angles = _Angles;
+var angles_default = Angles;
 export {
-  Angles as default, Angles
+  Angles,
+  angles_default as default
 };
+//# sourceMappingURL=angles.mjs.map

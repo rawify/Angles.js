@@ -1,0 +1,6 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Angles.js",
+  "description": "Angle normalization, conversion, interpolation, distance, and compass helpers for JavaScript.",
+  "excludeFolders": ["dist", "node_modules", "coverage", "_"]
+}
